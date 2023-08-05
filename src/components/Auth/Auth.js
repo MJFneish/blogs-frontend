@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import styles from './auth.module.css';
 import Login from './login.js';
 import Signup from './signup.js';
+import { useLocalStorageUser } from '../common/functions/functions';
 
-function Auth(props) {
-  const user = props.user;
+function Auth() {
+  const user = useLocalStorageUser();
   const AUTH = {
     LOGIN: "login",
     SIGNUP: "signup",

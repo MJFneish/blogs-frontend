@@ -4,10 +4,10 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import styles from '../../assets/css/blog.module.css'
 import authStyles from '../Auth/auth.module.css'
 import Swal from 'sweetalert2';
-import { generateSlug } from '../common/functions/functions';
+import { generateSlug, useLocalStorageUser } from '../common/functions/functions';
 
-function BlogCreateEdit(props) {
-  const user = props.user;
+function BlogCreateEdit() {
+  const user = useLocalStorageUser();
 
   const [blog, setBlog] = useState({
     name: '',
@@ -22,6 +22,13 @@ function BlogCreateEdit(props) {
     const newSlug = generateSlug(blog.name);
     setBlog((b) => ({ ...b, slug: newSlug }));
   }, [blog.name]);
+
+  useEffect(() =>{
+    if(!localStorage.getItem('blog-token')){
+      console.log('hello')
+      window.location.href = '/';
+    }
+  }, []);
 
 
   useEffect(() => {
@@ -79,7 +86,7 @@ function BlogCreateEdit(props) {
           if (id)
             response = await editBlog(id, blog.user_id, blog.name, blog.slug, blog.desc, blog.author);
           else
-            response = await addBlog(1, blog.name, blog.slug, blog.desc, 'author');
+            response = await addBlog(user.id, blog.name, blog.slug, blog.desc, user.username);
           if (response.status === 200) {
             setBlog(response.data.data);
             Swal.fire(
@@ -114,7 +121,7 @@ function BlogCreateEdit(props) {
   return (
     <div className={`container gap-15 mx-auto py-15 mt-5`}>
       <div className={`container grid-cols-2 lg:w-3/5 gap-15 mx-auto py-16 ${styles.card}`}>
-        <div className={`text-center text-6xl font-bold`}>{id? 'Edit Your Post' : 'Create new Post'}</div>
+        <div className={`text-center font-bold lg:text-6xl md:text-5xl text-4xl`}>{id? 'Edit Your Post' : 'Create new Post'}</div>
         <form className={`align-items-center ${authStyles.blogForm}`}>
           <div className={`${authStyles.field} ${authStyles.input_field}`}>
             <input

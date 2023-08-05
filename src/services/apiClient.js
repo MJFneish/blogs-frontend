@@ -30,14 +30,18 @@ export const register = (username, password, confirmPassword) => {
   return APIClient.post('/auth/register', form);
 };
 
+export const logout = () => {
+  return APIClient.post('/auth/logout');
+}
+
 export const checkAuth = () => {
     return APIClient.post('/auth/check-auth');
 };
   
 // Blog API functions 
 
-export const getAllBlogs = () => {
-    return APIClient.get('/blogs');
+export const getAllBlogs = (firstId, perPage) => {
+    return APIClient.get('/blogs', {firstId, perPage});
 };
 
 export const getBlog = (id) => {
@@ -49,7 +53,6 @@ export const addBlog = (user_id, name, slug, desc, author ) => {
 };
 
 export const editBlog = (id, user_id, name, slug, desc, author) => {
-  console.log(id, user_id, name, slug, desc, author);
     return APIClient.put(`/blogs/${id}`, { user_id, name, slug, desc, author });
 };
 

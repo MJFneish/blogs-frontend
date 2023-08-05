@@ -8,19 +8,16 @@ import Auth from './components/Auth/Auth';
 import { checkAuth } from './services/apiClient';
 
 function App() {
-  const [user, setUser] = useState({});
-
   useEffect(() => {
+    
     const checkUserAuthentication = async () => {
-
       try {
         const response = await checkAuth();
         if (response.status == 200) {
           if (response.data.success == true) {
-            setUser(response.data.user, { active: true });
+            localStorage.setItem('blog-user', JSON.stringify(response.data.user));
           } else {
-            setUser({ active: false });
-
+            localStorage.removeItem('blog-user');
           }
         }
       } catch (error) {
@@ -32,11 +29,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path='/' element={<Home user={user} />} /> {/*sho all blogs from all users*/}
-      <Route path='/auth' element={<Auth user={user} />} />
-      <Route path='/blog/details/:id' element={<BlogDetails user={user} />} /> {/*sho detailed blogs from current user*/}
-      <Route path='/blog/create-edit/:id?' element={<BlogCreateEdit user={user} />} /> {/*create a blog from current user*/}
-      <Route path='*' element={<PageNotFound user={user} />} />
+      <Route path='/' element={<Home />} />
+      <Route path='/auth' element={<Auth />} />
+      <Route path='/blog/details/:id' element={<BlogDetails />} />
+      <Route path='/blog/create-edit/:id?' element={<BlogCreateEdit />} />
+      <Route path='*' element={<PageNotFound />} />
     </Routes>
   );
 }

@@ -2,8 +2,7 @@ import React from 'react'
 import styles from './PageNotFound.module.css'
 import { Link } from 'react-router-dom'
 
-function PageNotFound(props) {
-  const user = props.user;
+function PageNotFound() {
 
   return (
     <div className={styles.container}>

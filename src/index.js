@@ -6,17 +6,19 @@ import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/index.css';
 import AppWrapper from './components/common/NavBar/AppWrapper';
-const root = ReactDOM.createRoot(document.getElementById('root'));
 
+function AppRoot() {
+  return (
+    <React.StrictMode>
+      <BrowserRouter>
+        <AppWrapper />
+        <App />
+      </BrowserRouter>
+    </React.StrictMode>
+  );
+}
 
-root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AppWrapper/>
-      <App/>
-    </BrowserRouter>
-
-  </React.StrictMode>
-);
+const root = document.getElementById('root');
+ReactDOM.createRoot(root).render(<AppRoot />);
 
 reportWebVitals();

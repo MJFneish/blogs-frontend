@@ -3,10 +3,11 @@ import { deleteBlog, getBlog } from '../../services/apiClient';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import styles from '../../assets/css/blog.module.css'
 import Swal from 'sweetalert2';
-import { getDate } from '../common/functions/functions';
+import { getDate, useLocalStorageUser } from '../common/functions/functions';
 
-function BlogDetails(props) {
-  const user = props.user;
+function BlogDetails() {
+  const user = useLocalStorageUser();
+
   const [blog, setBlog] = useState({});
   const [startPage, setStartPage] = useState(false);
   const { id } = useParams();
@@ -91,23 +92,23 @@ function BlogDetails(props) {
       }
     });
   };
-  
+
   return (
     <div className={`container gap-15 mx-auto py-15 mt-5`}>
-      <div className={`m-auto text-center pt-16 pb-5`}>
-        <div className={`text-6xl font-bold`}>Blog Details Page</div>
+      <div className={`m-auto text-center `}>
+        <div className={` font-bold lg:text-6xl md:text-5xl text-4xl`}>Blog Details Page</div>
       </div>
       {
         startPage &&
         <div key={blog.id} className={`container grid-cols-2 lg:w-3/5 gap-15 mx-auto py-16 mt-5 ${styles.card}`}>
           <div className={`mx-2 md:mx-0`}>
-            <h2 className={` text-blue-600 font-bold text-4xl uppercase`}>{blog.name}</h2>
+            <h2 className={` text-blue-600 font-bold text-2xl uppercase sm:text-3xl`}>{blog.name}</h2>
           </div>
           <div className={``}>
-            <p className={`font-bold text-gray-500 text-lg p-4 `}>{blog.desc}</p>
-            <p className={`mb-5 p-4`}>Done By : <span style={{ color: '#4070f4' }}>{blog.author}</span>&nbsp; &#x2022;&nbsp; {getDate(blog.updated_at)}</p>
-            <Link to={`/blog/create-edit/${blog.id}`} className={`bg-green-600 text-gray-100 my-5 ml-5 py-3 px-4 rounded-lg font-bold uppercase place-self-start`}>Edit</Link>
-            <button onClick={handleDeleteBlog} className={`bg-red-600 text-gray-100 my-5 ml-5 py-3 px-4 rounded-lg font-bold uppercase place-self-start`}>Delete</button>
+            <p className={`font-bold text-gray-500 sm:text-lg p-4`}>{blog.desc}</p>
+            <p className={`p-4`}>Done By : <span style={{ color: '#4070f4' }}>{blog.author}</span>&nbsp; &#x2022;&nbsp; {getDate(blog.updated_at)}</p>
+            {user && <Link to={`/blog/create-edit/${blog.id}`} className={`bg-green-600 text-gray-100 ml-5 py-3 px-4 rounded-lg font-bold uppercase place-self-start`}>Edit</Link>}
+            {user && <button onClick={handleDeleteBlog} className={`bg-red-600 text-gray-100 ml-5 py-3 px-4 rounded-lg font-bold uppercase place-self-start`}>Delete</button>}
           </div>
         </div>
       }

@@ -1,16 +1,72 @@
 import React, { useEffect, useState } from 'react'
 import styles from './auth.module.css';
+import Swal from 'sweetalert2';
+import { login } from '../../services/apiClient';
+import { useNavigate } from 'react-router-dom';
+import { useLocalStorageUser } from '../common/functions/functions';
 
 function Login(props) {
+  const user = useLocalStorageUser();
     const changeForm = props.changeForm;
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         username: '',
         password: '',
     })
+    useEffect(() =>{
+        if(user){
+            window.location.href = '/';
+        }
+      }, []);
 
-    const handleSubmitForm = () => {}
+    const handleSubmitForm = (e) => {
+        e.preventDefault();
+        if (form.username == '' || form.password == '') {
+            Swal.fire({
+                title: 'Stop there!',
+                text: "You need to fill all required input!",
+                icon: 'warning',
+            })
+        } else if (form.password.length >= 6) {
+            const registerRequest = async () => {
+                let response;
+                try {
+                    response = await login(form.username, form.password, form.confirmPassword);
+                    if (response.status === 200) {
+                        setForm(response.data.user);
+                        localStorage.setItem('blog-token', response.data.token)
+                        Swal.fire(
+                            'Success!',
+                            'You have been logged in successfully',
+                            'success'
+                        ).then((result) => {
+                            window.location.href = '/';
+                        });
+                    } else {
+                        Swal.fire(
+                            'Wait!',
+                            `${response.data.error}`,
+                            'info'
+                        )
+                    }
+                } catch (error) {
+                    Swal.fire(
+                        'Oops...!',
+                        `${error.message}`,
+                        'info'
+                    )
+                }
+            };
+            registerRequest();
+        } else {
+            Swal.fire({
+                title: 'Stop there!',
+                text: "Your password should be more than 6 characters!",
+                icon: 'warning',
+            })
+        }
+    }
 
-    useEffect(()=> {console.log(form)}, [form]);
     return (
         <div className={`${styles.form} ${styles.login}`}>
             <div className={`${styles.form_content}`}>

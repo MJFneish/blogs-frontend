@@ -1,0 +1,34 @@
+.nav_link {
+    text-align: end;
+    position: relative;
+    transition: 0.3s all;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 700;
+}
+
+.nav_link::before {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 1px;
+    left: 50%;
+    bottom: -5px;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    transition: 0.3s all;
+}
+
+.nav_link:hover {
+    color: #fff;
+    letter-spacing: 1.5px;
+}
+.nav_link:hover::before {
+    width: 100%;
+    height: 1.5px;
+}
+
+@media only screen and (max-width: 992px) {
+    .nav_link::before {
+      display: none;
+    }
+  }

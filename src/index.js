@@ -9,12 +9,10 @@ import AppWrapper from './components/common/NavBar/AppWrapper';
 
 function AppRoot() {
   return (
-    <React.StrictMode>
       <BrowserRouter>
         <AppWrapper />
         <App />
       </BrowserRouter>
-    </React.StrictMode>
   );
 }
 

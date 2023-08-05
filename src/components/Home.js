@@ -7,26 +7,27 @@ import { getDate } from './common/functions/functions';
 function Home() {
   const perPage = 10;
   const [firstId, setFirstId] = useState(0);
-  const [allBlogs, setAllBlogs] = useState([]);
-  const [dummy, setDummy] = useState(0);
-  const [requestAccess, setRequestAccess] = useState(true);
+  let [allBlogs, setAllBlogs] = useState([]);
+  let [fetching, setFetching] = useState(false);
+  let [scrollHeight, setScrollHeight] = useState(0);
 
 
-  const getBlogs = async () => {
-    if(dummy%2 == 0){
+  let getBlogs = async () => {
+    if(fetching) return;
+      setFetching(true);
       try {
-        const response = await getAllBlogs(firstId, perPage);
+  console.log(firstId, perPage)
+        let params = {firstId, perPage}
+        const response = await getAllBlogs(params);
         if (response.status === 200) {
-          setAllBlogs((prevBlogs) => [ ...prevBlogs, ...response.data.data ]);
+          setAllBlogs([ ...allBlogs, ...response.data.data ]);
           setFirstId(response.data.data.reduce((max, blog) => (blog.id > max ? blog.id : max), firstId))
-          setRequestAccess(true);
-          console.log(allBlogs);
         }
       } catch (error) {
         console.error(error);
       }
-    }
-    setDummy(dummy++);
+      setFetching(false);
+    
   };
 
   useEffect(() => {
@@ -34,19 +35,20 @@ function Home() {
   }, []);
 
   const handleScroll = () => {
-    const scrollPosition = window.innerHeight + window.scrollY;
     const pageHeight = document.documentElement.scrollHeight;
-    if (scrollPosition >= pageHeight - 400) {
+    if (scrollHeight >= pageHeight - 400) {
       getBlogs();
     }
   };
+
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-  console.log(allBlogs)
+    handleScroll()
+  }, [scrollHeight]);
+  
+  window.addEventListener('scroll', function () {
+    setScrollHeight(window.innerHeight + window.scrollY)
+  });
+  
   return (
     <div className={`container gap-15 mx-auto py-15 mt-5`}>
       <div className={`m-auto text-center pt-16 pb-5`}>

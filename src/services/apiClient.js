@@ -40,8 +40,8 @@ export const checkAuth = () => {
   
 // Blog API functions 
 
-export const getAllBlogs = (firstId, perPage) => {
-    return APIClient.get('/blogs', {firstId, perPage});
+export const getAllBlogs = (params) => {
+    return APIClient.get('/blogs', {params});
 };
 
 export const getBlog = (id) => {
